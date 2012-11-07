@@ -113,6 +113,7 @@
     <ClInclude Include="..\include\Resources.h" />
     <ClInclude Include="gaydadsStarbucks.h" />
     <ClInclude Include="HW04Gaydads5App.h" />
+    <ClInclude Include="Image.h" />
     <ClInclude Include="Starbucks.h" />
   </ItemGroup>
   <ItemGroup>

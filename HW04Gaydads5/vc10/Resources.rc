@@ -1,5 +1,7 @@
 #include "Resources.h"
+//#include "Image.h"
 
 ID ICON "cinder_app_icon.ico"
 
+RES_IMAGE	IMAGE	"Map of USA white on black.jpeg"
 //RES_MY_RES

@@ -1,4 +1,7 @@
 #pragma once
+#include "Resources.h"
+#include "Image.h"
+#include "cinder/ImageIo.h"
 #include "cinder/app/AppBasic.h"
 #include "cinder/gl/gl.h"
 #include "HW04Gaydads5App.h"
@@ -11,6 +14,7 @@
 using namespace ci;
 using namespace ci::app;
 using namespace std;
+
 
 Entry* HW04Gaydads5App::readFile(){
 	string line;
@@ -33,8 +37,9 @@ Entry* HW04Gaydads5App::readFile(){
 	return arr;
 }
 
-void HW04Gaydads5App::setup()
-{
+void HW04Gaydads5App::setup() {
+
+	myImage = gl::Texture( loadImage( loadResource( RES_IMAGE, "IMAGE" ) ) );
 	structure = new gaydadsStarbucks();
 	Entry* AllStarbucks = readFile();
 	Entry* location;
@@ -57,6 +62,7 @@ void HW04Gaydads5App::draw()
 {
 	// clear out the window with black
 	gl::clear( Color( 0, 0, 0 ) ); 
+	gl::draw( myImage, getWindowBounds() );
 }
 
 CINDER_APP_BASIC( HW04Gaydads5App, RendererGl )

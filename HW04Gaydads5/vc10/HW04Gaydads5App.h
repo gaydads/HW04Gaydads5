@@ -1,6 +1,8 @@
 #pragma once
+#include "cinder/ImageIo.h"
 #include "cinder/app/AppBasic.h"
 #include "cinder/gl/gl.h"
+#include "cinder/gl/Texture.h"
 #include "Starbucks.h"
 #include "gaydadsStarbucks.h"
 
@@ -16,4 +18,5 @@ class HW04Gaydads5App : public AppBasic {
 	void draw();
 	Entry* readFile();
 	gaydadsStarbucks* structure;
+	gl::Texture myImage;
 };
