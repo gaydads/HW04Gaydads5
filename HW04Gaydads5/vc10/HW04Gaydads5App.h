@@ -19,4 +19,12 @@ class HW04Gaydads5App : public AppBasic {
 	Entry* readFile();
 	gaydadsStarbucks* structure;
 	gl::Texture myImage;
+	void prepareSettings(Settings* settings);
+private:
+	Surface* mySurface;
+	static const int windowWidth=600;
+	static const int windowHeight=600;
+	static const int surfaceSize=1024;
+	Entry* Starbucks;
+
 };
