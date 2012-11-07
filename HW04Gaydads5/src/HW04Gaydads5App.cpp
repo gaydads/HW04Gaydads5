@@ -70,10 +70,14 @@ void HW04Gaydads5App::draw()
 	// clear out the window with black
 	gl::clear( Color( 0, 0, 0 ) ); 
 	gl::draw( myImage, getWindowBounds() );
-	gl::drawSolidCircle( Vec2f( 575.0f, 175.0f ), 5.0f  );
+	//gl::drawSolidCircle( Vec2f( 575.0f, 175.0f ), 5.0f  );
 	for(int i = 0; i < 7655; i++){
-		gl::drawSolidCircle( Vec2f((Starbucks[i].x *550)+25, (Starbucks[i].y*(-375))+490), 1.0f);
+
+		gl::drawSolidCircle( Vec2f(((Starbucks[i].x *600)+40), (Starbucks[i].y*(-400))+525), 1.0f);
 	}
+
+	Entry* location = structure->getNearest(.5,.5);
+	gl::drawSolidCircle( Vec2f (((location->x *600)+40), (location->y*(-400)) +525), 50.0f);
 	//west = 25
 	//east = 575
 	//550
