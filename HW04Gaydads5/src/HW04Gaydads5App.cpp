@@ -178,11 +178,12 @@ void HW04Gaydads5App::setup() {
 		*/
 	int xcor,ycor,j;
 	int count = 0;
-	for (double x=0; x<800; x++) {
 	for (double y=0; y<600; y++) {
-		if (count == 10) {
-			//if(x/10==0) {
-				//if(y/10==0) {
+	for (double x=0; x<800; x++) {
+		//if (count == 100) {
+			//count = 0;
+			if((int)x%5==0) {
+				if((int)y%5==0) {
 			location = structure->getNearest(x/800,y/600); //x/800,y/600
 			console() << location->identifier<<endl;
 			xcor = location->x*800;
@@ -202,10 +203,9 @@ void HW04Gaydads5App::setup() {
 			dataArray[index+2] = color.b;
 			console() << "Working..."<<endl;
 				}
-		count++;
-			//}
+		//count++;
+			}
 		}
-	}
 	}
 		/*for(int i = 0; i < 216331; i++){ 
 		for (int j = 1; j<57; j++) {
