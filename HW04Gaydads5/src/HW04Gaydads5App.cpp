@@ -59,6 +59,7 @@ CensusEntry* HW04Gaydads5App::readcensus2000() {
 		getline(myFile, line, ',');
 		getline(myFile, line, ',');
 		population = atof(line.c_str());
+		arr2000[i].population=population;
 		popcount = population + popcount;
 		state_pop_2000[1] = popcount;
 		getline(myFile, line, ',');
@@ -94,6 +95,7 @@ CensusEntry* HW04Gaydads5App::readcensus2010() {
 		getline(myFile, line, ',');
 		getline(myFile, line, ',');
 		population = atof(line.c_str());
+		arr2010[i].population=population;
 		popcount = population + popcount;
 		state_pop_2010[1] = popcount;
 		getline(myFile, line, ',');
@@ -146,11 +148,47 @@ void HW04Gaydads5App::setup() {
 	//location = structure->getNearest(.5,.5);
 	//HW04Gaydads5App::console() <<location->identifier <<std::endl;
 	Starbucks = AllStarbucks;
+	arr2000 = readcensus2000();
+	arr2010 = readcensus2010();
+	int count = 0;
+	int col=0;
+	int diff = 0;
+	for (int i =0; i<206676; i++) {
+		if (count == 10) {
+			count = 0;
+		diff = arr2010[i].population-arr2000[i].population;
+	
+		structure->getNearest(arr2010[i].x,arr2010[i].y);
+		int xcor = arr2010[i].x*800;
+		int ycor = (1-arr2010[i].y)*600;
+		int j = 3*(xcor+ycor*800);
+		Color8u color;
+		if (diff < 0) {
+			col = diff*255/-26815;
+			color = Color8u(col+100,0,0);
+			dataArray[j] = color.r;
+			dataArray[j+1] = color.g;
+			dataArray[j+2] = color.b;
+		}
+		else if (diff == 0) {
+			color = Color8u(255,255,0);
+			dataArray[j] = color.r;
+			dataArray[j+1] = color.g;
+			dataArray[j+2] = color.b;
+		}
+		else{
+			col = diff*255/15973;
+			color = Color8u(0,col+100,0);
+			dataArray[j] = color.r;
+			dataArray[j+1] = color.g;
+			dataArray[j+2] = color.b;
+		}
+	}
+		count++;
+	}
 
-	//readcensus2000();
-	//arr2010 = readcensus2010();
 	Color8u color2;
-	for(int i = 0; i < 7655; i++){
+	/*for(int i = 0; i < 7655; i++){
 		color2.r = rand()*255;
 		color2.g = rand()*255;
 		color2.b = rand()*255;
@@ -165,7 +203,7 @@ void HW04Gaydads5App::setup() {
 		dataArray[j] = color2.r;
 		dataArray[j+1] = color2.g;
 		dataArray[j+2] = color2.b;
-	}
+	}*/
 	/*int x=0;
 	int y=0;
 	for (int i=0; i<800*600; i++) {
@@ -176,8 +214,8 @@ void HW04Gaydads5App::setup() {
 		x++;
 		if(i%30==0) {
 		*/
-	int xcor,ycor,j;
-	int count = 0;
+	/*int xcor,ycor,j;
+	count = 0;
 	for (double y=0; y<600; y++) {
 	for (double x=0; x<800; x++) {
 		//if (count == 100) {
@@ -206,7 +244,7 @@ void HW04Gaydads5App::setup() {
 		//count++;
 			}
 		}
-	}
+	}*/
 		/*for(int i = 0; i < 216331; i++){ 
 		for (int j = 1; j<57; j++) {
 
