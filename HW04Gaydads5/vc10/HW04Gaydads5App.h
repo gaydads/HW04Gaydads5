@@ -13,6 +13,7 @@ class CensusEntry;
 class StarbucksColor;
 class HW04Gaydads5App : public AppBasic {
   public:
+	void keyDown( KeyEvent event);
 	void setup();
 	void mouseDown( MouseEvent event );	
 	void update();
@@ -48,6 +49,8 @@ private:
 	double mouse_x,mouse_y;
 	int* state_pop_2000;
 	int* state_pop_2010;
+	int toggle;
+	Entry* location;
 	
 
 };
