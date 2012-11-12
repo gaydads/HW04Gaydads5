@@ -37,23 +37,6 @@ Entry* HW04Gaydads5App::readFile(){
 	return arr;
 }
 
-StarbucksColor* HW04Gaydads5App::getNearest(double x, double y){
-	//Array
-	
-	double distance = abs(sqrt(   ((x-Locations[0].x)*(x-Locations[0].x)) + ((y-Locations[0].y)*(y-Locations[0].y))));;
-	Entry* temp = &(Locations[0]);
-
-	for(int i=1; i<7655; i++ ){
-		double distance2 = abs(sqrt(   ((x-Locations[i].x)*(x-Locations[i].x)) + ((y-Locations[i].y)*(y-Locations[i].y))));
-		if (distance > distance2) {
-			distance = distance2;
-			temp = &(Locations[i]);
-		}
-	}
-
-	Entry* nearest = temp;
-	return nearest;
-}
 
 CensusEntry* HW04Gaydads5App::readcensus2000() {
 
@@ -133,31 +116,30 @@ void HW04Gaydads5App::prepareSettings(Settings* settings)
 }
 
 void HW04Gaydads5App::setup() {
-	//gl::Texture myTexture; // initialized elsewhere
+	mySurface = new Surface(1024,1024,false);
+	Surface myImage;
+	myImage = loadImage("NewMap.jpg");
+	*mySurface = myImage;
+	
+	//(gl::Texture( loadImage( loadResource( RES_IMAGE, "IMAGE" ) ) ));
+	dataArray = (*mySurface).getData();
+	zoomSurf = new Surface(1024,1024,true);
+	zoomPix = (*zoomSurf).getData();
+	zoomConst = 1;
+	yOffset = 0;
+	xOffset = 0;
 
-	////////
-	mySurface_ = new Surface(1024,1024,true);
-	mySurface_->hasAlpha();
-	//gl::enableAlphaBlending;
-	uint8_t* dataArray = (*mySurface_).getData();
-	Color8u color;
-	for(int y=0; y<=800; y++){
-		for(int x=0;x<=800; x++){
 
-			int i = 4*(x + y*800);
-			
-			dataArray[i] = 255;
-			dataArray[i+1] = 255;
-			dataArray[i+2] = 255;
-			dataArray[i+3] = 1.0;
-		}
-	}
-	myTexture = new gl::Texture(*mySurface_);
-	myImage= (gl::Texture( loadImage( loadResource( RES_IMAGE, "IMAGE" ) ) ));
+	//Color8u color;
+
+
+	myTexture = new gl::Texture(*mySurface);
+	/*myImage= (gl::Texture( loadImage( loadResource( RES_IMAGE, "IMAGE" ) ) ));
 	myTexture = &(gl::Texture( loadImage( loadResource( RES_IMAGE, "IMAGE" ) ) ));
+	*/
 	structure = new gaydadsStarbucks();
 	Entry* AllStarbucks = readFile();
-	//Entry* location;
+	Entry* location;
 	
 	structure->build(AllStarbucks,7655);
 	
@@ -165,8 +147,66 @@ void HW04Gaydads5App::setup() {
 	//HW04Gaydads5App::console() <<location->identifier <<std::endl;
 	Starbucks = AllStarbucks;
 
-	readcensus2000();
-	arr2010 = readcensus2010();
+	//readcensus2000();
+	//arr2010 = readcensus2010();
+	Color8u color2;
+	for(int i = 0; i < 7655; i++){
+		color2.r = rand()*255;
+		color2.g = rand()*255;
+		color2.b = rand()*255;
+		int xcor = Starbucks[i].x*800;
+		int ycor = (1-Starbucks[i].y)*600;
+
+		//Color8u color(255,255,255);
+		int j = 3*(xcor+ycor*800);
+
+	dataArray = (*mySurface).getData();
+	//Color8u color = Color8u(255,255,255);
+		dataArray[j] = color2.r;
+		dataArray[j+1] = color2.g;
+		dataArray[j+2] = color2.b;
+	}
+	/*int x=0;
+	int y=0;
+	for (int i=0; i<800*600; i++) {
+		if (x%800 == 0) {
+			x=0;
+			y++;
+		}
+		x++;
+		if(i%30==0) {
+		*/
+	int xcor,ycor,j;
+	int count = 0;
+	for (double x=0; x<800; x++) {
+	for (double y=0; y<600; y++) {
+		if (count == 10) {
+			//if(x/10==0) {
+				//if(y/10==0) {
+			location = structure->getNearest(x/800,y/600); //x/800,y/600
+			console() << location->identifier<<endl;
+			xcor = location->x*800;
+			ycor = (1-location->y)*600;
+			j = 3*(xcor+ycor*800);
+
+			//dataArray = (*mySurface).getData();
+
+			int index = 3*(x+y*800);
+			Color8u color;
+			color.r = dataArray[j];
+			color.g = dataArray[j+1];
+			color.b = dataArray[j+2];
+
+			dataArray[index] = color.r;
+			dataArray[index+1] = color.g;
+			dataArray[index+2] = color.b;
+			console() << "Working..."<<endl;
+				}
+		count++;
+			//}
+		}
+	}
+	}
 		/*for(int i = 0; i < 216331; i++){ 
 		for (int j = 1; j<57; j++) {
 
@@ -175,7 +215,7 @@ void HW04Gaydads5App::setup() {
 			}
 		}
 	}*/
-	console() <<"State 1 pop: " << state_pop_2010[1] - state_pop_2000[1] <<endl;
+	//console() <<"State 1 pop: " << state_pop_2010[1] - state_pop_2000[1] <<endl;
 }
 
 void HW04Gaydads5App::mouseDown( MouseEvent event )
@@ -191,8 +231,8 @@ void HW04Gaydads5App::mouseDown( MouseEvent event )
 
 void HW04Gaydads5App::update()
 {
-	//uint8_t* dataArray = (*mySurface_).getData();
-	//(*myTexture).update(*mySurface_,(*mySurface_).getBounds());
+	dataArray = (*mySurface).getData();
+	(*myTexture).update(*mySurface,(*mySurface).getBounds());
 }
 
 void HW04Gaydads5App::draw()
@@ -200,10 +240,12 @@ void HW04Gaydads5App::draw()
 	
 	// clear out the window with black
 	gl::clear( Color( 0, 0, 0 ) ); 
-	gl::draw( myImage, getWindowBounds() );
-	gl::drawSolidCircle( Vec2f( 575.0f, 175.0f ), 5.0f  );
 
-	Color8u color2;
+	
+	//gl::draw( myImage, getWindowBounds() );
+	//gl::drawSolidCircle( Vec2f( 575.0f, 175.0f ), 5.0f  );
+
+	/*Color8u color2;
 	StarbucksColor* sc = new StarbucksColor[7655];
 	for(int i = 0; i < 7655; i++){
 		color2.r = rand()*255;
@@ -217,6 +259,7 @@ void HW04Gaydads5App::draw()
 		sc[i].identifier = Starbucks[i].identifier;
 
 		gl::color(255,255,255);
+		*/
 		/*if (Starbucks[i].x >=.5) {
 
 			if (Starbucks[i].y>=.5) {
@@ -231,27 +274,47 @@ void HW04Gaydads5App::draw()
 
 			}
 		gl::drawSolidCircle( Vec2f(  (( (Starbucks[i].x *550) + (Starbucks[i].y*(375)/10) )), (Starbucks[i].y*(-400))+520), 1.0f);
-		}*/
-	}
-
+		}
+	}*/
+	gl::draw(*myTexture);
 	if (clicked == true) {
 		double x = mouse_x/800;
 		double y = 1- (mouse_y/600);
 		//console() << x<< " " << y <<endl;
 	//console() << location->identifier<< "X=" << location->x <<"Y="  << location->y <<endl;
 	Entry*	location = structure->getNearest(x,y);
-	gl::color(0,0,255);
-	gl::drawSolidCircle( Vec2f (((location->x*800)), (((1-location->y)*600)) ), 2.0f);
-	gl::color(255,255,255);
+	
+	/*for(int y=0; y<800; y++){
+		for(int x=0;x<600; x++){
+			if(y < 0 || x < 0) continue;
+
+			//If correct distance away from mid points
+			if ((pow(x-location->x*600,2) + (pow(y-(1-location->y)*800,2))) <= (pow(50.0,2))) {
+			int i = 3*(x + y*800);
+			Color8u color = Color8u(255,255,255);
+			dataArray[i] = color.r;
+			dataArray[i+1] = color.g;
+			dataArray[i+2] = color.b;
+			}
+		}
+		}
+	}*/
+	//gl::Texture().
+	gl::drawSolidCircle(Vec2f (((location->x*800)), (((1-location->y)*600)) ), 2.0f);
+	//myTexture = new gl::Texture(*mySurface);
+	//gl::drawSolidCircle(Vec2f (((location->x*800)), (((1-location->y)*600)) ), 10.0f);
+	//gl::color(0,0,255);
+	//gl::drawSolidCircle( Vec2f (((location->x*800)), (((1-location->y)*600)) ), 2.0f);
+	//gl::color(255,255,255);
 	}
-	Entry* locs = new Entry[600*800];
+	/*Entry* locs = new Entry[600*800];
 	for (int i = 0; i<600; i++) {
 		for (int j =0; j<800; j++) {
 			StarbucksColor* loc = structure->getNearest(j/800,1-(i/800));
 			
 			gl::drawSolidCircle( Vec2f (i, j ), 1.0f);
 		}
-	}
+	}*/
 	/*for(int i = 0; i < 216331; i++){ 
 		for (int j = 1; j<57; j++) {
 
@@ -278,7 +341,37 @@ void HW04Gaydads5App::draw()
 
 	
 */
-	//gl::draw(*myTexture);
+
+	//Entry* Starbucks = readFile();
+	//for(int i = 0; i < 7655; i++){
+		/*color2.r = rand()*255;
+		color2.g = rand()*255;
+		color2.b = rand()*255;*/
+		/*int xcor = Starbucks[i].x*1024;
+		int ycor = (1-Starbucks[i].y)*1024;
+		Color8u color(255,255,255);
+		int j = 3*(xcor+ycor*800);
+		dataArray[j] = color.r;
+		dataArray[j+1] = color.g;
+		dataArray[j+2] = color.b;*/
+	/*dataArray = (*mySurface).getData();
+	Color8u color = Color8u(255,255,255);
+	int j = 3*(1);
+		dataArray[j] = color.r;
+		dataArray[j+1] = color.g;
+		dataArray[j+2] = color.b;
+		*/
+		/*for (int x=0; x<600; x++) {
+			for (int y=0; y<800; y++) {
+				int i = 4*(x + y*1024);
+				Color8u color;
+				dataArray[i] = color.r = 255;
+				dataArray[i+1] = color.g = 255;
+				dataArray[i+2] = color.b= 255;
+			}
+		}*/
+		//gl::drawSolidCircle( Vec2f( Starbucks[i].x*800, (1-Starbucks[i].y)*600) , 1.0f);
+	//}
 }
 
 CINDER_APP_BASIC( HW04Gaydads5App, RendererGl )

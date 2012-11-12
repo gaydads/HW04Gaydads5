@@ -26,6 +26,14 @@ class HW04Gaydads5App : public AppBasic {
 	StarbucksColor* getNearest(double x,double y);
 	CensusEntry* arr2010;
 	CensusEntry* arr2000;
+	Surface* mySurface;
+	uint8_t* pixels;
+	Surface* zoomSurf;
+	uint8_t* zoomPix;
+	uint8_t* dataArray;
+	int zoomConst;
+	int yOffset;  // For zoom
+	int xOffset;  // For zoom
 
 private:
 	Surface* mySurface_; //The Surface object whose pixel array we will modify
